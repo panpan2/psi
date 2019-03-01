@@ -581,8 +581,25 @@ struct DParser{
 	DExpr parseDExpr(){
 		return parseAdd();
 	}
-}
-DExpr dParse(string s){ // TODO: this is work in progress, usually updated in order to speed up debugging
-	return DParser(s).parseDExpr();
+
+	DExpr parseOptimization() {
+		if(!code.startsWith("max ") && !code.startsWith("argmax ")) {
+			return parseDExpr();
+		}
+		int mode = 0; // max
+		if(code.startsWith("argmax ")) {
+			mode = 1; // argmax
+		}
+		// consume the characters and the space
+		while(!code.front.isSpace()) next();
+		next();
+		auto expr = parseDExpr().simplify(one);
+		// then perform optimization using SGD, optimization.d
+		writeln("Perform optimization on:", expr);
+		return expr;
+	}
 }
 
+DExpr dParse(string s){ // TODO: this is work in progress, usually updated in order to speed up debugging
+	return DParser(s).parseOptimization();
+}
