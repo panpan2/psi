@@ -676,19 +676,7 @@ class Dℚ: DExpr{
 		return r;
 	}
 
-	override int opCmp(Object o){
-			Dℚ t = cast(Dℚ) o;
-			if (t is null) {
-				return super.opCmp(o);
-			} else {
-				// compare two numbers
-				int r;
-				if (this.c < t.c) r = -1;
-				else if (this.c > t.c) r = 1;
-				return r;
-			}
-	}
-
+	mixin ComparisonOperator!Dℚ;
 	mixin Constant;
 }
 mixin FactoryFunction!Dℚ;
@@ -786,8 +774,15 @@ class DFloat: DExpr{
 		return r;
 	}
 
+	mixin ComparisonOperator!DFloat;
+	mixin Constant;
+}
+mixin FactoryFunction!DFloat;
+
+mixin template ComparisonOperator(T)
+{
 	override int opCmp(Object o){
-			DFloat t = cast(DFloat) o;
+			T t = cast(T) o;
 			if (t is null) {
 				return super.opCmp(o);
 			} else {
@@ -798,10 +793,7 @@ class DFloat: DExpr{
 				return r;
 			}
 	}
-
-	mixin Constant;
 }
-mixin FactoryFunction!DFloat;
 
 class DE: DExpr{
 	alias subExprs=Seq!();
