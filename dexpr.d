@@ -786,6 +786,19 @@ class DFloat: DExpr{
 		return r;
 	}
 
+	override int opCmp(Object o){
+			DFloat t = cast(DFloat) o;
+			if (t is null) {
+				return super.opCmp(o);
+			} else {
+				// compare two numbers
+				int r;
+				if (this.c < t.c) r = -1;
+				else if (this.c > t.c) r = 1;
+				return r;
+			}
+	}
+
 	mixin Constant;
 }
 mixin FactoryFunction!DFloat;
